@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>TODO supply a title</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	</head>
-	<body>
-      <div>TODO write content</div>
-	</body>
+<html ng-app="CustomerModule">
+    <head>
+        <title>Create Customer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-resource.min.js"></script>
+        <script src="js/code.js"></script>
+    </head>
+    <body>
+        <div ng-controller = "CustomerController as customerController">
+            <form ng-submit="customerController.createCustomer(customer)">
+                <label>Firstname:</label>
+                <input type="text" ng-model="customer.firstname">
+                <label>Lastname:</label>
+                <input type="text" ng-model="customer.lastname">
+                <label>Username:</label>
+                <input type="text" ng-model="customer.username">
+                <label>Email:</label>
+                <input type="text" ng-model="customer.email">
+                <button type="submit">Submit Details</button>
+            </form>
+        </div>
+    </body>
 </html>
