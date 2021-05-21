@@ -24,13 +24,13 @@ public class CustomerBuilder extends RouteBuilder {
     public void configure() throws Exception {
         from("jetty:http://localhost:9000/createaccount?enableCORS=true")
                 .setExchangePattern(ExchangePattern.InOnly)
-                .log("Account created: ${body}")
+                .convertBodyTo(String.class)
+                .log("${body}")
                 .unmarshal().json(JsonLibrary.Gson, Account.class)
-                .log("Send to create-account queue: ${body}")
                 .to("jms:queue:create-account");
 
         from("jms:queue:create-account")
-                .bean(CreateCustomerCreator.class, "createCustomer({body})")
+                .bean(CreateCustomerCreator.class, "createCustomer(${body})")
                 .to("jms:queue:send-to-vend");
 
         from("jms:queue:send-to-vend")

@@ -1,5 +1,6 @@
 package router;
 
+import builder.CustomerBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.jms.JmsComponent;
@@ -29,7 +30,7 @@ public class Router {
 		camel.setStreamCaching(true);
 
 		// create and add the builder(s)
-//		camel.addRoutes(new BobTheBuilder());
+		camel.addRoutes(new CustomerBuilder());
 //		camel.addRoutes(new WendyTheBuilder());
 
 		// start routing
