@@ -6,6 +6,7 @@
 package builder;
 
 import creator.ChangeGroup;
+import creator.CreateAccountCreator;
 import creator.UpdateCustomerCreator;
 import domain.Sale;
 import domain.Summary;
@@ -63,6 +64,23 @@ public class SalesBuilder extends RouteBuilder{
                         + "${exchangeProperty.Customer_Email})")
                 .multicast().to("jms:queue:to-vend", "jms:queue:to-account-service");
                 
+        from("jms:queue:to-vend")
+                .removeHeader("*")
+                .setHeader("Authorization", constant("Bearer KiQSsELLtocyS2WDN5w5s_jYaBpXa0h2ex1mep1a"))
+                .marshal().json(JsonLibrary.Gson)
+                .setHeader(Exchange.CONTENT_TYPE).constant("application/json")
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .recipientList().simple("https://info303otago.vendhq.com/api/2.0/customer/${exchangeProperty.Customer_ID}")
+                .to("jms:queue:vend-updated");
+        
+        from("jms:queue:to-account-service")
+                .bean(CreateAccountCreator.class, "createAccount(${body})")
+                .marshal().json(JsonLibrary.Gson)
+                .removeHeaders("*")
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .recipientList().simple("http://localhost:8086/api/accounts/account/${exchangeProperty.Customer_ID}")
+                .to("jms:queue:account-service-response");
     }
     
 }

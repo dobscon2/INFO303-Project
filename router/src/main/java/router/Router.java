@@ -1,6 +1,7 @@
 package router;
 
 import builder.CustomerBuilder;
+import builder.SalesBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.jms.JmsComponent;
@@ -31,7 +32,7 @@ public class Router {
 
 		// create and add the builder(s)
 		camel.addRoutes(new CustomerBuilder());
-//		camel.addRoutes(new WendyTheBuilder());
+		camel.addRoutes(new SalesBuilder());
 
 		// start routing
 		System.out.println("Starting router...");
