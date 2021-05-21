@@ -26,6 +26,7 @@ public class SalesBuilder extends RouteBuilder{
     public void configure() throws Exception {
         from("jms:queue:new-sale")
                 .unmarshal().json(JsonLibrary.Gson, Sale.class)
+                .log("Formatted sale: ${body}")
                 .setProperty("Customer_ID").simple("${body.customer.id}")
                 .setProperty("Customer_Group").simple("${body.customer.group}")
                 .setProperty("Customer_Email").simple("${body.customer.email}")
@@ -70,10 +71,11 @@ public class SalesBuilder extends RouteBuilder{
                 .marshal().json(JsonLibrary.Gson)
                 .setHeader(Exchange.CONTENT_TYPE).constant("application/json")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .recipientList().simple("https://info303otago.vendhq.com/api/2.0/customer/${exchangeProperty.Customer_ID}")
+                .recipientList().simple("https://info303otago.vendhq.com/api/2.0/customers/${exchangeProperty.Customer_ID}")
                 .to("jms:queue:vend-updated");
         
         from("jms:queue:to-account-service")
+                .log("account body: ${body}")
                 .bean(CreateAccountCreator.class, "createAccount(${body})")
                 .marshal().json(JsonLibrary.Gson)
                 .removeHeaders("*")
