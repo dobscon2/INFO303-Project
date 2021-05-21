@@ -6,6 +6,7 @@
 package builder;
 
 import creator.ChangeGroup;
+import creator.UpdateCustomerCreator;
 import domain.Sale;
 import domain.Summary;
 import org.apache.camel.builder.RouteBuilder;
