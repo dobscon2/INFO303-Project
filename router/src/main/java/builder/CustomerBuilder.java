@@ -44,7 +44,7 @@ public class CustomerBuilder extends RouteBuilder {
                 .choice()
                 .when().simple("${header.CamelHttpResponseCode} == '201'")
                 .convertBodyTo(String.class)
-                .to("jms:queue:vend-reponse")
+                .to("jms:queue:vend-response")
                 .otherwise()
                 .log("ERROR RESPONSE ${header.CamelHttpResponseCode} ${body}")
                 .convertBodyTo(String.class)
